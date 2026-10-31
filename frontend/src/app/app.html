@@ -1,0 +1,9 @@
+<div class="app-shell" [class.authenticated]="auth.isAuthenticated()">
+  <app-header *ngIf="auth.isAuthenticated()"></app-header>
+
+  <main class="main-content" [class.full-page]="!auth.isAuthenticated()">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-toast-notifications></app-toast-notifications>
+</div>

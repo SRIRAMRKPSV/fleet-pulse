@@ -1,0 +1,12 @@
+{
+  "name": "fleet-pulse",
+  "version": "1.0.0",
+  "description": "Fleet Pulse - Real-Time Microservice Observability Platform",
+  "scripts": {
+    "start:backend": "npm --prefix back-end start",
+    "start:frontend": "npm --prefix frontend start",
+    "build:backend": "npm --prefix back-end run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:frontend": "npm --prefix frontend test"
+  }
+}
