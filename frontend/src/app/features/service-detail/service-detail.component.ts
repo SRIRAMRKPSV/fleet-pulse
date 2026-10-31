@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, effect, inject, signal } from '@angular/core';
+import { afterNextRender, Component, OnInit, OnDestroy, ElementRef, Injector, ViewChild, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MetricsStreamService } from '../../core/services/metrics-stream.service';
@@ -311,6 +311,7 @@ export function downsampleMetricPoints(points: MetricPoint[], maxPoints = 300): 
 export class ServiceDetailComponent implements OnInit, OnDestroy {
   stream = inject(MetricsStreamService);
   private readonly api = inject(ApiClientService);
+  private readonly injector = inject(Injector);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -410,9 +411,12 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
         typeof (point as MetricPoint).errRate === 'number' && Number.isFinite((point as MetricPoint).errRate) &&
         typeof (point as MetricPoint).rps === 'number' && Number.isFinite((point as MetricPoint).rps));
       this.dataPoints = downsampleMetricPoints(validPoints);
-      this.setupCharts();
-      this.historyLoadedServiceId.set(id);
       this.isHistoryLoading.set(false);
+      afterNextRender(() => {
+        if (controller.signal.aborted || this.serviceId() !== id) return;
+        this.setupCharts();
+        this.historyLoadedServiceId.set(id);
+      }, { injector: this.injector });
     }).catch(error => {
       if (controller.signal.aborted) return;
       console.error('Could not load service history:', error);

@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   apiBaseUrl: '/api',
-  webSocketUrl: '/ws?ws=down',
+  webSocketUrl: '/ws',
   sseUrl: '/api/events',
   healthUrl: '/health'
 };
